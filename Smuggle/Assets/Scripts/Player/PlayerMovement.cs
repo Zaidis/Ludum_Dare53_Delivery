@@ -13,15 +13,28 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float groundCheckRadius = 0.4f;
 
     [Header("Player Variables")]
-    [SerializeField] private float speed;
+    [SerializeField] private float defaultSpeed;
+    [SerializeField] private float sprintSpeed;
+    [SerializeField] private float crouchSpeed;
     [SerializeField] private float jumpHeight;
     [SerializeField] private bool canMove;
     [SerializeField] private float gravity;
-    
+
+    [SerializeField]private float speed;
     public Vector3 movement;
     public Vector3 velocity;
-    [SerializeField]private bool jumped;
-    [SerializeField]private bool isGrounded; //on the ground, not in the air
+    private bool jumped;
+    
+    private bool isGrounded; //on the ground, not in the air
+    private bool canSprint = true;
+
+    [Header("Crouching")]
+    private bool isCrouching;
+    private bool canCrouch = true;
+    
+    private void Start() {
+        speed = defaultSpeed;
+    }
 
     public void FixedUpdate() {
         if (canMove) {
@@ -53,5 +66,41 @@ public class PlayerMovement : MonoBehaviour
             jumped = false;
         }
             
+    }
+
+    public void Sprint(InputAction.CallbackContext context) {
+        if (context.performed && canSprint) {
+            speed = sprintSpeed;
+            canCrouch = false;
+        } else if (context.canceled) {
+            speed = defaultSpeed;
+            canCrouch = true;
+        }
+    }
+
+    public void Crouch(InputAction.CallbackContext context) {
+        if (context.action.triggered) {
+            if (canCrouch)
+                ManageCrouching(isCrouching);
+        }
+    }
+
+    private void ManageCrouching(bool crouch) {
+        StopAllCoroutines();
+        if (!crouch) { //begin crouching
+            speed = crouchSpeed;
+            canSprint = false;
+            isCrouching = true;
+            controller.height = 1f;
+            controller.center = new Vector3(0, -0.5f, 0);
+            StartCoroutine(CameraMovement.instance.CameraCrouchHeight());
+        } else { //no longer crouching
+            speed = defaultSpeed;
+            canSprint = true;
+            isCrouching = false;
+            controller.center = Vector3.zero;
+            controller.height = 2f;
+            StartCoroutine(CameraMovement.instance.CameraNormalHeight());
+        }
     }
 }
