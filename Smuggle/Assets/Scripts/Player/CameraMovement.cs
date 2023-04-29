@@ -20,15 +20,6 @@ public class CameraMovement : MonoBehaviour
         transform.localRotation = Quaternion.Euler(xRot, 0f, 0f);
         transform.parent.Rotate(Vector3.up * x);
     }
-    /*
-    public void CamX(InputAction.CallbackContext context) {
-        x = context.ReadValue<float>() * sensitivity / 2;
-    }
-
-    public void CamY(InputAction.CallbackContext context) {
-        y = context.ReadValue<float>() * sensitivity / 2;
-    }*/
-
     public void CamMovement(InputAction.CallbackContext context) {
         x = context.ReadValue<Vector2>().x * sensitivity / 2;
         y = context.ReadValue<Vector2>().y * sensitivity / 2;
