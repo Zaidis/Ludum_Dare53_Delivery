@@ -14,25 +14,44 @@ public class PlayerMovement : MonoBehaviour
 
     [Header("Player Variables")]
     [SerializeField] private float speed;
+    [SerializeField] private float jumpHeight;
+    [SerializeField] private bool canMove;
+    [SerializeField] private float gravity;
+    
     public Vector3 movement;
-    [SerializeField]private bool canMove;
-    private bool isGrounded; //on the ground, not in the air
+    public Vector3 velocity;
+    [SerializeField]private bool jumped;
+    [SerializeField]private bool isGrounded; //on the ground, not in the air
 
     public void FixedUpdate() {
         if (canMove) {
             isGrounded = Physics.CheckSphere(groundCheck.position, groundCheckRadius, groundLayer);
 
+            if(isGrounded && velocity.y < 0f) {
+                velocity.y = 0f;
+            }
             Vector3 m = (transform.right * movement.x + transform.forward * movement.z) * speed;
             controller.Move(m * Time.deltaTime);
 
-            if (!isGrounded) {
-                Vector3 v = new Vector3(0, -2f, 0);
-                controller.Move(v * Time.deltaTime);
+            if(jumped && isGrounded) {
+                velocity.y += Mathf.Sqrt(jumpHeight * -2f * gravity);
             }
+
+            velocity.y += gravity * Time.deltaTime;
+
+            controller.Move(velocity * Time.deltaTime);
         }
     }
 
     public void Move(InputAction.CallbackContext context) {
         movement = new Vector3(context.ReadValue<Vector2>().x, 0, context.ReadValue<Vector2>().y);
+    }
+    public void Jump(InputAction.CallbackContext context) {
+        if (context.performed && isGrounded) {
+            jumped = context.action.triggered;
+        } else if (context.canceled) {
+            jumped = false;
+        }
+            
     }
 }
