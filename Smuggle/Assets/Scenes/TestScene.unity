@@ -3873,7 +3873,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   body: {fileID: 1228230969}
-  speed: 3
+  speed: 2
   alertLevel: 0
   guardState: 0
   patrolLocations:
@@ -3883,6 +3883,7 @@ MonoBehaviour:
   alertReductionMinimum: 0
   alertWaitingBuffer: 5
   guardIsAnxious: 0
+  currentChaseAmount: 0
 --- !u!320 &1751256742
 PlayableDirector:
   m_ObjectHideFlags: 0

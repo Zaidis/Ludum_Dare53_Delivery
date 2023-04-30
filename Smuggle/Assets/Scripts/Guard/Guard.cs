@@ -27,6 +27,8 @@ public class Guard : MonoBehaviour
     public bool guardIsAnxious; //when this is true, the guard will never go below medium alert
     
     private IEnumerator decreaseAlert, waitForAlert, lookForTarget, patrol, chase;
+    private int maxChaseAmount = 5;
+    [SerializeField]private int currentChaseAmount = 0;
     private bool isPatroling, isChasing;
 
     private void Awake() {
@@ -51,6 +53,7 @@ public class Guard : MonoBehaviour
                 ResetPatrol(true);
             } else if (!isChasing && alertValue > 75) {
                 ResetPatrol();
+                currentChaseAmount = 0;
                 isChasing = true;
                 ResetChase(true);
             }
@@ -79,6 +82,7 @@ public class Guard : MonoBehaviour
         StopCoroutine(chase);
         chase = Chase();
         if (on) StartCoroutine(chase);
+        else isChasing = false;
     }
     public IEnumerator TriggerPatrolAndWait(Action action) {
 
@@ -112,7 +116,7 @@ public class Guard : MonoBehaviour
             patrolIndex = -1;
         }
         patrolIndex++;
-        
+        guardState = GuardState.patrol;
         agent.SetDestination(patrolLocations[patrolIndex].position);
         float dist = Vector3.Distance(this.transform.position, patrolLocations[patrolIndex].position);
         while (dist >= 5f ) {
@@ -125,6 +129,8 @@ public class Guard : MonoBehaviour
 
     public IEnumerator Chase() {
         isPatroling = false;
+        
+        guardState = GuardState.chase;
         Vector3 pos = player.transform.position;
         float dist = Vector3.Distance(this.transform.position, pos);
         agent.SetDestination(pos);
@@ -132,9 +138,11 @@ public class Guard : MonoBehaviour
             dist = Vector3.Distance(this.transform.position, pos);
             yield return null;
         }
-        Debug.Log("CHASING ");
+        currentChaseAmount++;
         yield return new WaitForSeconds(2f);
-        ResetChase(true);
+        if (currentChaseAmount != maxChaseAmount)
+            ResetChase(true);
+        else ResetChase();
         
     }
     private IEnumerator Look(Transform target, Action action = null) {
@@ -167,6 +175,7 @@ public class Guard : MonoBehaviour
     private void OnTriggerStay(Collider other) {
         if (other.gameObject.CompareTag("Player")) {
             alertValue += IncreaseAlertValue() * Time.deltaTime;
+            if(alertValue >= 100) alertValue = 100;
             GetAlertLevel();
 
         }
