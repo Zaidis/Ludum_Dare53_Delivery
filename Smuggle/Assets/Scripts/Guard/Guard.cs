@@ -133,8 +133,12 @@ public class Guard : MonoBehaviour
         guardState = GuardState.chase;
         Vector3 pos = player.transform.position;
         float dist = Vector3.Distance(this.transform.position, pos);
+
+        var i = 0f; 
+
         agent.SetDestination(pos);
-        while (dist >= 5f) {
+        while (dist >= 5f && i < 5f) {
+            i += 1 * Time.deltaTime;
             dist = Vector3.Distance(this.transform.position, pos);
             yield return null;
         }
