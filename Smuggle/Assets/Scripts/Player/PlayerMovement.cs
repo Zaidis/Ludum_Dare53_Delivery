@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 public class PlayerMovement : MonoBehaviour
 {
-
+    public static PlayerMovement instance;
     [SerializeField] private CharacterController controller;
 
     public movementType moveType = movementType.none;
@@ -33,7 +33,11 @@ public class PlayerMovement : MonoBehaviour
     [Header("Crouching")]
     private bool isCrouching;
     private bool canCrouch = true;
-    
+
+    private void Awake() {
+        if (instance == null) instance = this;
+        else Destroy(this.gameObject);
+    }
     private void Start() {
         speed = defaultSpeed;
     }
