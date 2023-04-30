@@ -1875,7 +1875,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-34888
+  m_Name: pb_Mesh24524
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -2438,6 +2438,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   controller: {fileID: 1638621753}
+  moveType: 0
   groundCheck: {fileID: 732375336}
   groundLayer:
     serializedVersion: 2
@@ -3577,7 +3578,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-10654
+  m_Name: pb_Mesh24600
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -3750,6 +3751,7 @@ GameObject:
   - component: {fileID: 1751256742}
   - component: {fileID: 1751256741}
   - component: {fileID: 1751256740}
+  - component: {fileID: 1751256743}
   m_Layer: 7
   m_Name: Guard
   m_TagString: Untagged
@@ -3837,7 +3839,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1751256735}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 6.38, y: 1.968, z: 3.47}
+  m_LocalPosition: {x: 6.38, y: 2.027, z: 3.47}
   m_LocalScale: {x: 1, y: 1.5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -3870,11 +3872,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9bb7ea10c1b52eb4c9fefa059db5c7b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  speed: 3
+  alertLevel: 0
+  guardState: 0
   patrolLocations:
   - {fileID: 961083141}
   - {fileID: 28949275}
-  alertLevel: 0
-  speed: 3
+  alertValue: 0
+  alertReductionMinimum: 0
+  alertWaitingBuffer: 5
+  guardIsAnxious: 0
 --- !u!320 &1751256742
 PlayableDirector:
   m_ObjectHideFlags: 0
@@ -3885,20 +3892,42 @@ PlayableDirector:
   m_Enabled: 1
   serializedVersion: 3
   m_PlayableAsset: {fileID: 11400000, guid: 0f591b37c1163d14aa8d3102fbf806fe, type: 2}
-  m_InitialState: 1
+  m_InitialState: 0
   m_WrapMode: 2
   m_DirectorUpdateMode: 1
   m_InitialTime: 0
-  m_SceneBindings: []
+  m_SceneBindings:
+  - key: {fileID: 3709691603548336004, guid: 0f591b37c1163d14aa8d3102fbf806fe, type: 2}
+    value: {fileID: 1751256743}
   m_ExposedReferences:
     m_References: []
+--- !u!95 &1751256743
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1751256735}
+  m_Enabled: 0
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 8e31c48585b32814b8f2bf121529fecb, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!43 &1779188671
 Mesh:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-40504
+  m_Name: pb_Mesh24650
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2

@@ -7,6 +7,7 @@ public class Guard : MonoBehaviour
 {
    
     private NavMeshAgent agent;
+    private Animator animator;
     private PlayerMovement player;
     [SerializeField] private float speed;
     public AlertLevel alertLevel = AlertLevel.none;
@@ -24,13 +25,15 @@ public class Guard : MonoBehaviour
     public float alertWaitingBuffer = 5f; //seconds for how long we wait to decrease alert value
     public bool guardIsAnxious; //when this is true, the guard will never go below medium alert
     
-    private IEnumerator decreaseAlert, waitForAlert;
+    private IEnumerator decreaseAlert, waitForAlert, lookForTarget;
     private bool isPatroling, isChasing;
 
     private void Awake() {
         agent = GetComponent<NavMeshAgent>();
+        animator = GetComponent<Animator>();
         agent.speed = speed;
 
+        lookForTarget = Look(null, null);
         ResetCoroutines();
     }
 
@@ -47,7 +50,14 @@ public class Guard : MonoBehaviour
             
         }
     }
+    
+    public void LookAtTarget(Transform target, Action action = null) {
+        StopCoroutine(lookForTarget);
+        lookForTarget = Look(target, action);
+        StartCoroutine(lookForTarget);
+    }
     public void ResetCoroutines() {
+        
         decreaseAlert = DecreaseAlertValue();
         waitForAlert = WaitForAlert();
     }
@@ -105,11 +115,13 @@ public class Guard : MonoBehaviour
         yield return new WaitForSeconds(5);
         StartCoroutine(Patrol());
     }
-    public IEnumerator LookAtTarget(Transform target, Action action = null) {
+    private IEnumerator Look(Transform target, Action action = null) {
+        animator.SetBool("Idle", false);
+        animator.enabled = false;
         var i = 0f;
         float speed = 2f;
         Quaternion toRotation = Quaternion.LookRotation(target.position - transform.position);
-        while(i < 1f) {
+        while(i < 2f) {
             i += Time.deltaTime * speed;
             transform.rotation = Quaternion.RotateTowards(transform.rotation, toRotation, i);
             yield return null;

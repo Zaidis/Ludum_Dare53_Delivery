@@ -79,7 +79,7 @@ public class PlayerMovement : MonoBehaviour
             Debug.Log("Test");
             Guard g = FindObjectOfType<Guard>();
             //StartCoroutine(g.Patrol());
-            StartCoroutine(g.LookAtTarget(this.gameObject.transform));
+            g.LookAtTarget(this.gameObject.transform);
         }
     }
 
