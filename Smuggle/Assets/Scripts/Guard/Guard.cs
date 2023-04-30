@@ -7,6 +7,7 @@ public class Guard : MonoBehaviour
 {
    
     private NavMeshAgent agent;
+    [SerializeField] private GameObject body;
     private Animator animator;
     private PlayerMovement player;
     [SerializeField] private float speed;
@@ -123,6 +124,7 @@ public class Guard : MonoBehaviour
         Quaternion toRotation = Quaternion.LookRotation(target.position - transform.position);
         while(i < 2f) {
             i += Time.deltaTime * speed;
+            body.transform.localRotation = Quaternion.RotateTowards(body.transform.localRotation, Quaternion.Euler(0,90,0), i);
             transform.rotation = Quaternion.RotateTowards(transform.rotation, toRotation, i);
             yield return null;
         }

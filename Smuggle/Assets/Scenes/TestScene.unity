@@ -1647,7 +1647,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1228230970}
   m_Layer: 7
-  m_Name: GameObject
+  m_Name: Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3872,6 +3872,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9bb7ea10c1b52eb4c9fefa059db5c7b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  body: {fileID: 1228230969}
   speed: 3
   alertLevel: 0
   guardState: 0
@@ -3897,7 +3898,7 @@ PlayableDirector:
   m_DirectorUpdateMode: 1
   m_InitialTime: 0
   m_SceneBindings:
-  - key: {fileID: 3709691603548336004, guid: 0f591b37c1163d14aa8d3102fbf806fe, type: 2}
+  - key: {fileID: 3124529126213892767, guid: 0f591b37c1163d14aa8d3102fbf806fe, type: 2}
     value: {fileID: 1751256743}
   m_ExposedReferences:
     m_References: []
@@ -3909,7 +3910,7 @@ Animator:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1751256735}
-  m_Enabled: 0
+  m_Enabled: 1
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: 8e31c48585b32814b8f2bf121529fecb, type: 2}
   m_CullingMode: 0
