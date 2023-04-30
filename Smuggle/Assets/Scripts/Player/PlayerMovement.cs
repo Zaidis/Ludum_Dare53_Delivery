@@ -59,6 +59,15 @@ public class PlayerMovement : MonoBehaviour
     public void Move(InputAction.CallbackContext context) {
         movement = new Vector3(context.ReadValue<Vector2>().x, 0, context.ReadValue<Vector2>().y);
     }
+
+    public void Test(InputAction.CallbackContext context) {
+        if (context.action.triggered) {
+            Debug.Log("Test");
+            Guard g = FindObjectOfType<Guard>();
+            StartCoroutine(g.LookAtTarget(g.GetCurrentRotation(), this.transform));
+        }
+    }
+
     public void Jump(InputAction.CallbackContext context) {
         if (context.performed && isGrounded) {
             jumped = context.action.triggered;
