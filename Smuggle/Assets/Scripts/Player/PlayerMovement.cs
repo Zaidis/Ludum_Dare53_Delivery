@@ -7,6 +7,8 @@ public class PlayerMovement : MonoBehaviour
 
     [SerializeField] private CharacterController controller;
 
+    public movementType moveType = movementType.none;
+
     [Header("Ground")]
     [SerializeField] private Transform groundCheck;
     [SerializeField] private LayerMask groundLayer;
@@ -37,6 +39,12 @@ public class PlayerMovement : MonoBehaviour
     }
 
     public void FixedUpdate() {
+        if (movement == Vector3.zero) moveType = movementType.none;
+        else if (speed == defaultSpeed) moveType = movementType.walking;
+        else if (speed == sprintSpeed) moveType = movementType.sprinting;
+        else if (speed == crouchSpeed) moveType = movementType.crouching;
+
+
         if (canMove) {
             isGrounded = Physics.CheckSphere(groundCheck.position, groundCheckRadius, groundLayer);
 
@@ -58,6 +66,8 @@ public class PlayerMovement : MonoBehaviour
 
     public void Move(InputAction.CallbackContext context) {
         movement = new Vector3(context.ReadValue<Vector2>().x, 0, context.ReadValue<Vector2>().y);
+
+        
     }
 
     public void Test(InputAction.CallbackContext context) {
@@ -83,6 +93,7 @@ public class PlayerMovement : MonoBehaviour
             speed = sprintSpeed;
             canCrouch = false;
         } else if (context.canceled) {
+            
             speed = defaultSpeed;
             canCrouch = true;
         }
@@ -113,4 +124,12 @@ public class PlayerMovement : MonoBehaviour
             StartCoroutine(CameraMovement.instance.CameraNormalHeight());
         }
     }
+}
+
+public enum movementType {
+    none,
+    walking, 
+    sprinting, 
+    crouching,
+    jumping,
 }
