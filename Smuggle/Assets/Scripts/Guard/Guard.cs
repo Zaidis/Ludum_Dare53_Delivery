@@ -26,7 +26,7 @@ public class Guard : MonoBehaviour
     public float alertWaitingBuffer = 5f; //seconds for how long we wait to decrease alert value
     public bool guardIsAnxious; //when this is true, the guard will never go below medium alert
     
-    private IEnumerator decreaseAlert, waitForAlert, lookForTarget;
+    private IEnumerator decreaseAlert, waitForAlert, lookForTarget, patrol, chase;
     private bool isPatroling, isChasing;
 
     private void Awake() {
@@ -35,7 +35,9 @@ public class Guard : MonoBehaviour
         agent.speed = speed;
 
         lookForTarget = Look(null, null);
-        ResetCoroutines();
+        patrol = Patrol();
+        chase = Chase();
+        ResetAlertCoroutines();
     }
 
     private void Start() {
@@ -44,9 +46,13 @@ public class Guard : MonoBehaviour
 
     public void FixedUpdate() {
         if(alertValue >= 50) {
-            if(!isPatroling && !isChasing) {
+            if (!isPatroling && !isChasing) {
                 isPatroling = true;
-                StartCoroutine(Patrol());
+                ResetPatrol(true);
+            } else if (!isChasing && alertValue > 75) {
+                ResetPatrol();
+                isChasing = true;
+                ResetChase(true);
             }
             
         }
@@ -57,10 +63,22 @@ public class Guard : MonoBehaviour
         lookForTarget = Look(target, action);
         StartCoroutine(lookForTarget);
     }
-    public void ResetCoroutines() {
+    public void ResetAlertCoroutines() {
         
         decreaseAlert = DecreaseAlertValue();
         waitForAlert = WaitForAlert();
+    }
+
+    public void ResetPatrol(bool on = false) {
+        StopCoroutine(patrol);
+        patrol = Patrol();
+        if(on) StartCoroutine(patrol);
+    }
+
+    public void ResetChase(bool on = false) {
+        StopCoroutine(chase);
+        chase = Chase();
+        if (on) StartCoroutine(chase);
     }
     public IEnumerator TriggerPatrolAndWait(Action action) {
 
@@ -101,20 +119,23 @@ public class Guard : MonoBehaviour
             dist = Vector3.Distance(this.transform.position, patrolLocations[patrolIndex].position);
             yield return null;
         }
-        Debug.Log("HEHOEIRHOAISH");
         yield return new WaitForSeconds(5f);
-        StartCoroutine(Patrol());
+        ResetPatrol(true);
     }
 
     public IEnumerator Chase() {
-        var i = 0f;
-        while (i < 20f) {
-            i += 1 * Time.deltaTime;
-            agent.SetDestination(patrolLocations[patrolIndex].position);
+        isPatroling = false;
+        Vector3 pos = player.transform.position;
+        float dist = Vector3.Distance(this.transform.position, pos);
+        agent.SetDestination(pos);
+        while (dist >= 5f) {
+            dist = Vector3.Distance(this.transform.position, pos);
             yield return null;
         }
-        yield return new WaitForSeconds(5);
-        StartCoroutine(Patrol());
+        Debug.Log("CHASING ");
+        yield return new WaitForSeconds(2f);
+        ResetChase(true);
+        
     }
     private IEnumerator Look(Transform target, Action action = null) {
         animator.SetBool("Idle", false);
@@ -139,7 +160,7 @@ public class Guard : MonoBehaviour
         if (other.gameObject.CompareTag("Player")) {
             StopCoroutine(decreaseAlert);
             StopCoroutine(waitForAlert);
-            ResetCoroutines();
+            ResetAlertCoroutines();
         }
     }
 
