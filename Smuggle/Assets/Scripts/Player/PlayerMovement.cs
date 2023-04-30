@@ -64,7 +64,7 @@ public class PlayerMovement : MonoBehaviour
         if (context.action.triggered) {
             Debug.Log("Test");
             Guard g = FindObjectOfType<Guard>();
-            StartCoroutine(g.LookAtTarget(g.GetCurrentRotation(), this.transform));
+            StartCoroutine(g.Patrol());
         }
     }
 
