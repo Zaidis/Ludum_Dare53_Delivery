@@ -6,7 +6,8 @@ public class PlayerMovement : MonoBehaviour
 {
     public static PlayerMovement instance;
     [SerializeField] private CharacterController controller;
-
+    public bool canMove;
+    public bool isCaught, hasWon;
     public movementType moveType = movementType.none;
 
     [Header("Ground")]
@@ -19,7 +20,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float sprintSpeed;
     [SerializeField] private float crouchSpeed;
     [SerializeField] private float jumpHeight;
-    [SerializeField] private bool canMove;
+    
     [SerializeField] private float gravity;
 
     [SerializeField]private float speed;

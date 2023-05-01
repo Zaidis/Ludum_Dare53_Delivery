@@ -7,9 +7,10 @@ public class Guard : MonoBehaviour
 {
    
     private NavMeshAgent agent;
-    [SerializeField] private GameObject body;
     private Animator animator;
     private PlayerMovement player;
+    public AlertBar bar;
+    [SerializeField] private GameObject body;
     [SerializeField] private float speed;
     public AlertLevel alertLevel = AlertLevel.none;
     public GuardState guardState = GuardState.none;
@@ -44,6 +45,13 @@ public class Guard : MonoBehaviour
 
     private void Start() {
         player = PlayerMovement.instance;
+        bar.guardTransform = this.gameObject.transform;
+        bar.transform.SetParent(LevelManager.instance.alertCanvas.transform);
+
+        foreach(Transform patrolPoint in patrolLocations) {
+            patrolPoint.SetParent(LevelManager.instance.patrolPointParent);
+        }
+
     }
 
     public void FixedUpdate() {
@@ -104,6 +112,7 @@ public class Guard : MonoBehaviour
 
         while(alertValue > alertReductionMinimum) {
             alertValue -= 1 * Time.deltaTime;
+            bar.SetAlertBarFillValue(alertValue);
             yield return null;
         }
 
@@ -179,6 +188,7 @@ public class Guard : MonoBehaviour
     private void OnTriggerStay(Collider other) {
         if (other.gameObject.CompareTag("Player")) {
             alertValue += IncreaseAlertValue() * Time.deltaTime;
+            bar.SetAlertBarFillValue(alertValue);
             if(alertValue >= 100) alertValue = 100;
             GetAlertLevel();
 
@@ -195,13 +205,13 @@ public class Guard : MonoBehaviour
     private float IncreaseAlertValue() {
         switch (player.moveType) {
             case movementType.walking:
-                return 2f;
+                return 12f;
             case movementType.sprinting:
-                return 4f;
+                return 25f;
             case movementType.crouching:
-                return 1f;
+                return 5f;
             default:
-                return 0f;
+                return 10f;
         }
     }
 
