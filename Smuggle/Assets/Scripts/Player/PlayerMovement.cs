@@ -31,7 +31,7 @@ public class PlayerMovement : MonoBehaviour
     private bool canSprint = true;
 
     [Header("Crouching")]
-    private bool isCrouching;
+    private bool isCrouching = false;
     private bool canCrouch = true;
 
     private void Awake() {
@@ -93,14 +93,18 @@ public class PlayerMovement : MonoBehaviour
     }
 
     public void Sprint(InputAction.CallbackContext context) {
-        if (context.performed && canSprint) {
-            speed = sprintSpeed;
-            canCrouch = false;
-        } else if (context.canceled) {
-            
-            speed = defaultSpeed;
-            canCrouch = true;
+        if (canSprint) {
+            if (context.performed) {
+                speed = sprintSpeed;
+                canCrouch = false;
+            }
+            else if (context.canceled) {
+
+                speed = defaultSpeed;
+                canCrouch = true;
+            }
         }
+        
     }
 
     public void Crouch(InputAction.CallbackContext context) {
